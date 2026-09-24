@@ -1,0 +1,33 @@
+name: PR checklist
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+    branches: [main]
+
+permissions:
+  pull-requests: read
+
+jobs:
+  checklist:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verificar checklist obrigatório
+        env:
+          PR_BODY: ${{ github.event.pull_request.body }}
+        run: |
+          required=(
+            "Testei o agente"
+            "Rodei os evals"
+            "Documentei o prompt alterado"
+          )
+          fail=0
+          for item in "${required[@]}"; do
+            if printf '%s\n' "$PR_BODY" | grep -Eiq "^\s*[-*] \[[xX]\] .*${item}"; then
+              echo "OK: $item"
+            else
+              echo "::error::Item obrigatório não marcado: $item"
+              fail=1
+            fi
+          done
+          exit $fail

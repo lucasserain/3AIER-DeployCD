@@ -1,0 +1,27 @@
+# CODEOWNERS — define quem revisa cada parte do sistema multiagente.
+# A ÚLTIMA regra que casar com o arquivo vence.
+# Owners precisam ter permissão de escrita no repo.
+# Para adicionar revisores, acrescente @usuario ou @org/time na linha.
+
+# Padrão: qualquer arquivo sem regra específica
+*                       @lucasserain
+
+# Núcleo do agente (loop, ferramentas, chamada ao modelo)
+/agent.py               @lucasserain
+/requirements.txt       @lucasserain
+
+# Interface web
+/app.py                 @lucasserain
+
+# Prompts de sistema — um dono por agente
+/agent.md               @lucasserain
+/agent-ada.md           @lucasserain
+/agent-lint.md          @lucasserain
+/agent-val.md           @lucasserain
+
+# Memória persistente injetada no prompt
+/memory.md              @lucasserain
+
+# Governança do repo (CODEOWNERS, templates, workflows) — sempre revisado
+/.github/               @lucasserain
+/scripts/               @lucasserain

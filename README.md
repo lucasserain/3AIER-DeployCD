@@ -152,3 +152,15 @@ Para você saber o que falta quando precisar:
 
 Tudo isso é infraestrutura em volta das ~35 linhas do `responder()`. O loop não
 muda.
+
+---
+
+## 8. Fluxo de contribuição
+
+A `main` é protegida. Toda mudança entra por pull request e precisa de:
+
+- **1 aprovação de code owner** — quem revisa cada agente/arquivo está em `.github/CODEOWNERS`
+- **Check `PR checklist` verde** — o template de PR exige marcar: testou o agente, rodou os evals, documentou o prompt alterado
+- **Conversas resolvidas** e branch atualizada com a `main`
+
+Regras aplicadas por `scripts/setup-branch-protection.ps1` (requer `gh auth login` como admin).
