@@ -27,9 +27,16 @@ $body = @'
 }
 '@
 
-$body | gh api --method PUT "repos/$Repo/branches/$Branch/protection" `
-    -H "Accept: application/vnd.github+json" --input -
-if ($LASTEXITCODE -ne 0) { throw "Falha ao aplicar branch protection" }
+# PowerShell 5.1 adiciona BOM ao fazer pipe para executáveis; grava UTF-8 sem BOM em arquivo.
+$tmp = [System.IO.Path]::GetTempFileName()
+[System.IO.File]::WriteAllText($tmp, $body, (New-Object System.Text.UTF8Encoding $false))
+try {
+    gh api --method PUT "repos/$Repo/branches/$Branch/protection" `
+        -H "Accept: application/vnd.github+json" --input $tmp
+    if ($LASTEXITCODE -ne 0) { throw "Falha ao aplicar branch protection" }
+} finally {
+    Remove-Item $tmp -ErrorAction SilentlyContinue
+}
 
 Write-Host "Branch protection aplicada em $Repo@$Branch"
 gh api "repos/$Repo/branches/$Branch/protection" --jq '{reviews: .required_pull_request_reviews.required_approving_review_count, code_owners: .required_pull_request_reviews.require_code_owner_reviews, checks: .required_status_checks.contexts, admins: .enforce_admins.enabled}'
